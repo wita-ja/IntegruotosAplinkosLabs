@@ -4,7 +4,6 @@ namespace IntegruotuSistemuLaboratorinis1
 {
     class Program
     {
-      
         static void Main(string[] args)
         {
             Tasks tasks = new Tasks();
@@ -65,13 +64,7 @@ namespace IntegruotuSistemuLaboratorinis1
                              break;
                 }
                 Console.ReadLine();
-            }
-
-           
-        }
-
-     
+            }        
+        }   
     }
-
-
 }
