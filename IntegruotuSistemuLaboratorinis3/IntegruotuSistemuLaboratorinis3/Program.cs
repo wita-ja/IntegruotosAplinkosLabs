@@ -18,6 +18,7 @@ namespace IntegruotuAplinkuLaboratorinis3
         Console.WriteLine("\n       Menu\n" +
                             "1 - Add student.\n" +
                             "2 - Print students to table\n" +
+                            "3 - Import students from csv file" +
                             "0 - Exit.\n");
 
         Console.Write("Choose which task to run: ");
@@ -39,7 +40,7 @@ namespace IntegruotuAplinkuLaboratorinis3
                 Console.Write("How many homeworks to generate: ");
                 userChoice = Console.ReadLine();
 
-                if (Convert.ToInt32(userChoice) >0)
+                if (Convert.ToInt32(userChoice) > 0)
                 {
                   students.Add(HandlingStudentInput(true, Convert.ToInt32(userChoice)));
                   break;
@@ -61,7 +62,11 @@ namespace IntegruotuAplinkuLaboratorinis3
           case 2:
             Student.PrintInTable(students, true);
             break;
-
+          case 3:
+            string mainPath = @Environment.CurrentDirectory;
+            students = Student.ImportStudentsFromCsv(mainPath + "\\students.csv");
+            Console.WriteLine("Students where successfully imported. Press any key to continue");
+            break;
           default:
             Console.WriteLine("Choice don't exists");
             break;

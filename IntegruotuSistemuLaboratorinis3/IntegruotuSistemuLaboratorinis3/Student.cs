@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO;
 
 namespace IntegruotuSistemuLaboratorinis3
 {
@@ -27,7 +28,7 @@ namespace IntegruotuSistemuLaboratorinis3
 
     public double CalcFinalPointsUsingAvg()
     {
-       return ((Homeworks.Average() * 0.3) + ExamResult * 0.7);
+      return ((Homeworks.Average() * 0.3) + ExamResult * 0.7);
     }
 
     public double CalcFinalPointsUsingMedian()
@@ -48,7 +49,7 @@ namespace IntegruotuSistemuLaboratorinis3
         homeworkMedian = sortedNumbers.ElementAt(halfIndex);
       }
 
-      return ((homeworkMedian* 0.3) + ExamResult * 0.7);
+      return ((homeworkMedian * 0.3) + ExamResult * 0.7);
     }
 
     public static void PrintInTable(List<Student> students, bool median)
@@ -80,5 +81,40 @@ namespace IntegruotuSistemuLaboratorinis3
         });
       }
     }
+
+    public static List<Student> ImportStudentsFromCsv(string fileName)
+    {
+      List<Student> students = new List<Student>();
+      try
+      {
+        students = File.ReadAllLines(fileName)
+                .Skip(1)
+                .Select(line => line.Split(","))
+                .Select(values => StudentFromCsvString(values))
+                .ToList();
+      }
+      catch (FileNotFoundException e)
+      {
+        Console.WriteLine(e.ToString());
+      }
+      return students;
+    }
+    private static Student StudentFromCsvString(string[] values)
+    {
+      List<int> homeworks = new List<int>();
+
+      for (int i = 2; i <= values.Length - 1; i++)
+      {
+        int currval = Convert.ToInt32(values[i]);
+        if (currval < 1 || currval > 10)
+        {
+          throw new ArgumentOutOfRangeException(nameof(currval), $"Integer is out of allowed range (1-10).");
+        }
+        else homeworks.Add(currval);
+      }
+      return new Student(values[0], values[1], homeworks, Convert.ToInt32(values[7]));
+    }
   }
 }
+
+
