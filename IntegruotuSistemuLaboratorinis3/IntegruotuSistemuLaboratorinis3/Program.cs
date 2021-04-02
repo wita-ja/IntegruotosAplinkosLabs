@@ -19,6 +19,7 @@ namespace IntegruotuAplinkuLaboratorinis3
                             "1 - Add student.\n" +
                             "2 - Print students to table\n" +
                             "3 - Import students from csv file\n" +
+                            "4 - Generating and dividing students performance test\n" +
                             "0 - Exit.\n");
 
         Console.Write("Choose which task to run: ");
@@ -43,11 +44,14 @@ namespace IntegruotuAplinkuLaboratorinis3
               students.AddRange(StudentUtils.ImportStudentsFromCsv(mainPath + "\\students.csv"));
               Console.WriteLine("Students where successfully imported. Press any key to continue...");
               break;
+            case 4:
+              PerfMeasuringUtils.TestPerformance_v0_4();
+              break;
+
             default:
               Console.WriteLine("Choice don't exists");
               break;
           }
-
         }
         catch (FormatException e)
         {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace IntegruotuSistemuLaboratorinis3
 {
@@ -49,6 +50,119 @@ namespace IntegruotuSistemuLaboratorinis3
       Console.WriteLine("Student was successfully created. Press any key to continue...");
       return createdStudent;
     }
+    
+    public static void PrintInTable(List<Student> students, bool median)
+    {
+      students = students.OrderBy(student => student.Name).ToList();
+      string line = "----------------------------------------------------------------------------------------------";
+
+      Console.Write('\n');
+      if (median == false)
+      {
+        Console.WriteLine("{0, -30} {1, -20} {2, -5}", "Surname", "Name", "Final points (Avg.)");
+        Console.Write(line);
+        Console.Write('\n');
+
+        students.ForEach(student =>
+        {
+          Console.WriteLine("{0, -30} {1, -20} {2, -5:#.##}", student.Surname, student.Name, student.CalcFinalPointsUsingAvg());
+        });
+        Console.WriteLine("Press any key to continue...");
+      }
+      else
+      {
+        Console.WriteLine("{0, -30} {1, -20} {2, -5}", "Surname", "Name", "Final points (Avg.) / Final points (Med.)");
+        Console.Write(line);
+        Console.Write('\n');
+
+        students.ForEach(student =>
+        {
+          Console.WriteLine("{0, -30} {1, -20} {2, -21:#.##} {3, -20:#.##}", student.Surname, student.Name, student.CalcFinalPointsUsingAvg(), student.CalcFinalPointsUsingMedian());
+        });
+        Console.WriteLine("Press any key to continue...");
+      }
+    }
+
+    public static List<Student> ImportStudentsFromCsv(string fileName)
+    {
+      List<Student> students = new List<Student>();
+      try
+      {
+        students = File.ReadAllLines(fileName)
+                .Skip(1)
+                .Select(line => line.Split(","))
+                .Select(values => StudentFromCsvString(values))
+                .ToList();
+      }
+      catch (FileNotFoundException e)
+      {
+        Console.WriteLine(e.ToString());
+      }
+      return students;
+    }
+
+    public static List<Student> GenerateStudentsFullConstructor_List(int numOfStudents)
+    {
+      List<Student> students = new List<Student>();
+
+      for (int i = 0; i < numOfStudents; i++)
+      {
+        students.Add(new Student($"Name_{i}", $"Surname_{i}", GenerateHomeworks(5), GenerateExamResult()));
+      }
+      return students;
+    }
+
+    public static void SortStudents_v0_4(List<Student> students)
+    {
+      int numOfStudents = students.Count();
+      StreamWriter passedStudentsList = new StreamWriter($"passed_students_{numOfStudents}.csv");
+      StreamWriter failedStudentsList = new StreamWriter($"failed_students_{numOfStudents}.csv");
+
+      passedStudentsList.WriteLine("Name,Surname,HW1,HW2,HW3,HW4,HW5,Exam");
+      failedStudentsList.WriteLine("Name,Surname,HW1,HW2,HW3,HW4,HW5,Exam");
+
+      for (int i = 0; i < numOfStudents; i++)
+      {
+        Student currStudent = students.ElementAt(i);
+        if (currStudent.CalcFinalPointsUsingAvg() >= 5)
+          passedStudentsList.WriteLine(StudentToCsvString(currStudent));
+        else failedStudentsList.WriteLine(StudentToCsvString(currStudent));
+      }
+
+      passedStudentsList.Close();
+      failedStudentsList.Close();
+    }
+
+    private static string StudentToCsvString(Student student)
+    {
+      string allHomeworks = "";
+
+      foreach (var homework in student.Homeworks)
+      {
+        allHomeworks += $"{homework},";
+      }
+      allHomeworks = allHomeworks.Remove(allHomeworks.Length - 1, 1);
+
+      return ($"{student.Name},{student.Surname},{allHomeworks},{student.ExamResult}");
+    }
+
+    private static Student StudentFromCsvString(string[] values)
+    {
+      List<int> homeworks = new List<int>();
+
+      for (int i = 2; i < 7; i++)
+      {
+        int currval = Convert.ToInt32(values[i]);
+        if (currval < 1 || currval > 10)
+        {
+          throw new ArgumentOutOfRangeException(nameof(currval), $"Integer is out of allowed range (1-10).");
+        }
+        else homeworks.Add(currval);
+      }
+      homeworks.Sort();
+      return new Student(values[0], values[1], homeworks, Convert.ToInt32(values[7]));
+    }
+
     private static Student HandlingStudentDataInput(bool generateMarks, int homeworkCount = 0)
     {
       var tempStudent = new Student();
@@ -62,13 +176,8 @@ namespace IntegruotuSistemuLaboratorinis3
 
       if (generateMarks)
       {
-        Random random = new Random();
-
-        for (int i = 0; i < homeworkCount; i++) homeworks.Add(random.Next(1, 10));
-        homeworks.Sort();
-
-        tempStudent.Homeworks = homeworks;
-        tempStudent.ExamResult = random.Next(1, 10);
+        tempStudent.Homeworks = GenerateHomeworks(homeworkCount);
+        tempStudent.ExamResult = GenerateExamResult();
       }
       else
       {
@@ -120,72 +229,20 @@ namespace IntegruotuSistemuLaboratorinis3
       return tempStudent;
     }
 
-
-    public static void PrintInTable(List<Student> students, bool median)
+    private static List<int> GenerateHomeworks(int numOfHomeworks)
     {
-      students = students.OrderBy(student => student.Name).ToList();
-      string line = "----------------------------------------------------------------------------------------------";
-
-      Console.Write('\n');
-      if (median == false)
-      {
-        Console.WriteLine("{0, -30} {1, -20} {2, -5}", "Surname", "Name", "Final points (Avg.)");
-        Console.Write(line);
-        Console.Write('\n');
-
-        students.ForEach(student =>
-        {
-          Console.WriteLine("{0, -30} {1, -20} {2, -5:#.##}", student.Surname, student.Name, student.CalcFinalPointsUsingAvg());
-        });
-        Console.WriteLine("Press any key to continue...");
-      }
-      else
-      {
-        Console.WriteLine("{0, -30} {1, -20} {2, -5}", "Surname", "Name", "Final points (Avg.) / Final points (Med.)");
-        Console.Write(line);
-        Console.Write('\n');
-
-        students.ForEach(student =>
-        {
-          Console.WriteLine("{0, -30} {1, -20} {2, -21:#.##} {3, -20:#.##}", student.Surname, student.Name, student.CalcFinalPointsUsingAvg(), student.CalcFinalPointsUsingMedian());
-        });
-        Console.WriteLine("Press any key to continue...");
-      }
-    }
-
-    public static List<Student> ImportStudentsFromCsv(string fileName)
-    {
-      List<Student> students = new List<Student>();
-      try
-      {
-        students = File.ReadAllLines(fileName)
-                .Skip(1)
-                .Select(line => line.Split(","))
-                .Select(values => StudentFromCsvString(values))
-                .ToList();
-      }
-      catch (FileNotFoundException e)
-      {
-        Console.WriteLine(e.ToString());
-      }
-      return students;
-    }
-
-    private static Student StudentFromCsvString(string[] values)
-    {
-      List<int> homeworks = new List<int>();
-
-      for (int i = 2; i < 7; i++)
-      {
-        int currval = Convert.ToInt32(values[i]);
-        if (currval < 1 || currval > 10)
-        {
-          throw new ArgumentOutOfRangeException(nameof(currval), $"Integer is out of allowed range (1-10).");
-        }
-        else homeworks.Add(currval);
-      }
+      Random random = new Random();
+      var homeworks = new List<int>();
+      for (int i = 0; i < numOfHomeworks; i++) homeworks.Add(random.Next(1, 10));
       homeworks.Sort();
-      return new Student(values[0], values[1], homeworks, Convert.ToInt32(values[7]));
+
+      return homeworks;
+    }
+
+    private static int GenerateExamResult()
+    {
+      Random random = new Random();
+      return random.Next(1, 10);
     }
   }
 }
