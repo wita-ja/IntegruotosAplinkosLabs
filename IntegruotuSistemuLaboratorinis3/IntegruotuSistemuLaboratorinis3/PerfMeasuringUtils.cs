@@ -131,7 +131,6 @@ namespace IntegruotuSistemuLaboratorinis3
     public static void SortStudentsStrategyTwo(List<Student> students)
     {
       var failedStudents = new List<Student>();
-
       foreach (Student student in students)
       {
         if (student.CalcFinalPointsUsingAvg() < 5)
@@ -140,7 +139,7 @@ namespace IntegruotuSistemuLaboratorinis3
         }
         else continue;
       }
-      students.RemoveAll(student => failedStudents.Contains(student));
+      students.RemoveAll(student => student.CalcFinalPointsUsingAvg() < 5);
     }
 
     public static void SortStudentsStrategyTwo(LinkedList<Student> students)
@@ -173,7 +172,7 @@ namespace IntegruotuSistemuLaboratorinis3
         }
         else continue;
       }
-      students = new Queue<Student>(students.Where(student => !failedStudents.Contains(student)));
+      students = new Queue<Student>(students.Where(student => student.CalcFinalPointsUsingAvg() >= 5));
     }
 
     public static void MeasureOptimizedSortStrategies(Student[] studentsArray, string collection)
@@ -276,7 +275,7 @@ namespace IntegruotuSistemuLaboratorinis3
       GenerateAndSortStudents(100_000);
       GenerateAndSortStudents(1_000_000);
       GenerateAndSortStudents(10_000_000);
-      Console.WriteLine("\nTesting finished. Press any key to continue...");
+      Console.WriteLine("\nTesting finished. Press Enter key to continue...");
     }
 
     public static void TestCollectionsPerformance_v0_5()
@@ -301,7 +300,7 @@ namespace IntegruotuSistemuLaboratorinis3
       MeasureSort(Students10M, "List");
       MeasureSort(Students10M, "Linkedlist");
       MeasureSort(Students10M, "Queue"); 
-      Console.WriteLine("\nTesting finished. Press any key to continue...");
+      Console.WriteLine("\nTesting finished. Press Enter key to continue...");
     }
 
     public static void TestOptimizedSortingStrategies_v1_0()
@@ -326,7 +325,7 @@ namespace IntegruotuSistemuLaboratorinis3
       MeasureOptimizedSortStrategies(Students10M, "List");
       MeasureOptimizedSortStrategies(Students10M, "Linkedlist");
       MeasureOptimizedSortStrategies(Students10M, "Queue");
-      Console.WriteLine("\nTesting finished. Press any key to continue...");
+      Console.WriteLine("\nTesting finished. Press Enter key to continue...");
     }
     public static void GenerateTestingFiles()
     {
@@ -335,12 +334,12 @@ namespace IntegruotuSistemuLaboratorinis3
       StudentUtils.GenerateStudentsToCSVFile(100_000);
       StudentUtils.GenerateStudentsToCSVFile(1_000_000);
       StudentUtils.GenerateStudentsToCSVFile(10_000_000);
-      Console.WriteLine("\nTesting files were successfully generated. Press any key to continue...");
+      Console.WriteLine("\nTesting files were successfully generated. Press Enter key to continue...");
     }
 
     public static void ImportStudentsFromTestingFiles()
     {
-      Console.WriteLine("Importing students for testing");
+      Console.WriteLine("Importing students for testing(not taken into sorting measurment)");
 
       string filename;
 

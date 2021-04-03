@@ -45,7 +45,6 @@ namespace IntegruotuAplinkuLaboratorinis3
             case 3:
               string mainPath = @Environment.CurrentDirectory;
               students.AddRange(StudentUtils.ImportStudentsFromCsv(mainPath + "\\students.csv"));
-              Console.WriteLine("Students where successfully imported. Press any key to continue...");
               break;
             case 4:
               PerfMeasuringUtils.TestPerformance_v0_4();
@@ -70,7 +69,7 @@ namespace IntegruotuAplinkuLaboratorinis3
         }
         catch (FormatException e)
         {
-          Console.WriteLine($"{e.Message} Menu option are called only using numbers. Press any key to continue...");
+          Console.WriteLine($"{e.Message} Menu option are called only using numbers. Press Enter key to continue...");
         }
         Console.ReadLine();
       }
