@@ -88,7 +88,150 @@ namespace IntegruotuSistemuLaboratorinis3
       passedStudentsList.Close();
       failedStudentsList.Close();
     }
+
+    public static void SortStudentsStrategyOne(List<Student> students)
+    {
+      var passedStudents = new List<Student>();
+      var failedStudents = new List<Student>();
+
+      foreach (Student student in students)
+      {
+        if (student.CalcFinalPointsUsingAvg() >= 5)
+          passedStudents.Add(student);
+        else failedStudents.Add(student);
+      }
+    }
+
+    public static void SortStudentsStrategyOne(LinkedList<Student> students)
+    {
+      var passedStudents = new LinkedList<Student>();
+      var failedStudents = new LinkedList<Student>();
+
+      foreach (Student student in students)
+      {
+        if (student.CalcFinalPointsUsingAvg() >= 5)
+          passedStudents.AddLast(student);
+        else failedStudents.AddLast(student);
+      }
+    }
+
+    public static void SortStudentsStrategyOne(Queue<Student> students)
+    {
+      var passedStudents = new Queue<Student>();
+      var failedStudents = new Queue<Student>();
+
+      foreach (Student student in students)
+      {
+        if (student.CalcFinalPointsUsingAvg() >= 5)
+          passedStudents.Enqueue(student);
+        else failedStudents.Enqueue(student);
+      }
+    }
+
+    public static void SortStudentsStrategyTwo(List<Student> students)
+    {
+      var failedStudents = new List<Student>();
+
+      foreach (Student student in students)
+      {
+        if (student.CalcFinalPointsUsingAvg() < 5)
+        {
+          failedStudents.Add(student);
+        }
+        else continue;
+      }
+      students.RemoveAll(student => failedStudents.Contains(student));
+    }
+
+    public static void SortStudentsStrategyTwo(LinkedList<Student> students)
+    {
+      var failedStudents = new LinkedList<Student>();
+      LinkedListNode<Student> nextStudent;
+
+      var student = students.First;
+      while (student != null)
+      {
+        nextStudent = student.Next;
+        if (student.Value.CalcFinalPointsUsingAvg() < 5)
+        {
+          failedStudents.AddLast(student.Value);
+          students.Remove(student);
+        }
+        student = nextStudent;
+      }
+    }
     
+    public static void SortStudentsStrategyTwo(Queue<Student> students)
+    {
+      var failedStudents = new Queue<Student>();
+
+      foreach (Student student in students)
+      {
+        if (student.CalcFinalPointsUsingAvg() < 5)
+        {
+          failedStudents.Enqueue(student);
+        }
+        else continue;
+      }
+      students = new Queue<Student>(students.Where(student => !failedStudents.Contains(student)));
+    }
+
+    public static void MeasureOptimizedSortStrategies(Student[] studentsArray, string collection)
+    {
+      Stopwatch timer = new Stopwatch();
+      switch (collection)
+      {
+        case "List":
+          List<Student> studentsList = new List<Student>(studentsArray);
+          timer.Restart();
+          SortStudentsStrategyOne(studentsList);
+          timer.Stop();
+          Console.WriteLine("StrategyOne using List Collection.       " +
+           $"Time elapsed: {timer.Elapsed}, students amount {studentsArray.Length}");
+
+          timer.Restart();
+          SortStudentsStrategyTwo(studentsList);
+          timer.Stop();
+          Console.WriteLine("StrategyTwo using List Collection.       " +
+           $"Time elapsed: {timer.Elapsed}, students amount {studentsArray.Length}");
+          break;
+
+        case "Linkedlist":
+          LinkedList<Student> studentsLinkedlist = new LinkedList<Student>(studentsArray);
+          timer.Restart();
+          SortStudentsStrategyOne(studentsLinkedlist);
+          timer.Stop();
+          Console.WriteLine("StrategyOne using Linkedlist Collection. " +
+           $"Time elapsed: {timer.Elapsed}, students amount {studentsArray.Length}");
+
+          timer.Restart();
+          SortStudentsStrategyTwo(studentsLinkedlist);
+          timer.Stop();
+          Console.WriteLine("StrategyTwo using Linkedlist Collection. " +
+           $"Time elapsed: {timer.Elapsed}, students amount {studentsArray.Length}");
+          break;
+
+        case "Queue":
+          Queue<Student> studentsQueue = new Queue<Student>(studentsArray);
+          timer.Restart();
+          SortStudentsStrategyOne(studentsQueue);
+          timer.Stop();
+          Console.WriteLine("StrategyOne using Queue Collection.      " +
+           $"Time elapsed: {timer.Elapsed}, students amount {studentsArray.Length}");
+
+          timer.Restart();
+          SortStudentsStrategyTwo(studentsQueue);
+          timer.Stop();
+          Console.WriteLine("StrategyTwo using Queue Collection.      " +
+           $"Time elapsed: {timer.Elapsed}, students amount {studentsArray.Length}");
+          break;
+
+        default:
+          Console.WriteLine("Wrong collection Id");
+          break;
+      }
+    }
+
     public static void MeasureSort(Student[] studentsArray, string collection)
     {
       Stopwatch timer = new Stopwatch();
@@ -102,6 +245,7 @@ namespace IntegruotuSistemuLaboratorinis3
           Console.WriteLine("Sorting of random students by final score using List.       " +
            $"Time elapsed: {timer.Elapsed}, students amount {studentsArray.Length}");
           break;
+
         case "Linkedlist":
           LinkedList<Student> studentsLinkedlist = new LinkedList<Student>(studentsArray);
           timer.Restart();
@@ -109,6 +253,7 @@ namespace IntegruotuSistemuLaboratorinis3
           timer.Stop();
           Console.WriteLine("Sorting of random students by final score using LinkedList. " +
            $"Time elapsed: {timer.Elapsed}, students amount {studentsArray.Length}");
+
           break;
         case "Queue":
           Queue<Student> studentsQueue = new Queue<Student>(studentsArray);
@@ -117,6 +262,7 @@ namespace IntegruotuSistemuLaboratorinis3
           timer.Stop();
           Console.WriteLine("Sorting of random students by final score using Queue.      " +
            $"Time elapsed: {timer.Elapsed}, students amount {studentsArray.Length}");
+
           break;
         default:
           Console.WriteLine("Wrong collection Id");
@@ -158,6 +304,30 @@ namespace IntegruotuSistemuLaboratorinis3
       Console.WriteLine("\nTesting finished. Press any key to continue...");
     }
 
+    public static void TestOptimizedSortingStrategies_v1_0()
+    {
+      ImportStudentsFromTestingFiles();
+
+      MeasureOptimizedSortStrategies(Students10k, "List");
+      MeasureOptimizedSortStrategies(Students10k, "Linkedlist");
+      MeasureOptimizedSortStrategies(Students10k, "Queue");
+      Console.WriteLine("\n");
+
+      MeasureOptimizedSortStrategies(Students100k, "List");
+      MeasureOptimizedSortStrategies(Students100k, "Linkedlist");
+      MeasureOptimizedSortStrategies(Students100k, "Queue");
+      Console.WriteLine("\n");
+
+      MeasureOptimizedSortStrategies(Students1M, "List");
+      MeasureOptimizedSortStrategies(Students1M, "Linkedlist");
+      MeasureOptimizedSortStrategies(Students1M, "Queue");
+      Console.WriteLine("\n");
+
+      MeasureOptimizedSortStrategies(Students10M, "List");
+      MeasureOptimizedSortStrategies(Students10M, "Linkedlist");
+      MeasureOptimizedSortStrategies(Students10M, "Queue");
+      Console.WriteLine("\nTesting finished. Press any key to continue...");
+    }
     public static void GenerateTestingFiles()
     {
       Console.WriteLine("Testing files are being generated. Please wait");
