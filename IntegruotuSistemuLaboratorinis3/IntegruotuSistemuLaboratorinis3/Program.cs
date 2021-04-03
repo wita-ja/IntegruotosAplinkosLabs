@@ -21,7 +21,8 @@ namespace IntegruotuAplinkuLaboratorinis3
                             "3 - Import students from csv file\n" +
                             "4 - Generating and dividing students performance test\n" +
                             "5 - Generate csv files with students for performance testing\n" +
-                            "6 - Measure performance of sorting students while using List, Linkedlist, Queue to store them\n" +
+                            "6 - Measure performance of students sorting while using List, Linkedlist, Queue to store them\n" +
+                            "7 - Measure performance of improved students sorting while using List, LinkedList, Queue to store them\n" +
                             "0 - Exit.\n");
 
         Console.Write("Choose which task to run: ");
@@ -44,7 +45,6 @@ namespace IntegruotuAplinkuLaboratorinis3
             case 3:
               string mainPath = @Environment.CurrentDirectory;
               students.AddRange(StudentUtils.ImportStudentsFromCsv(mainPath + "\\students.csv"));
-              Console.WriteLine("Students where successfully imported. Press any key to continue...");
               break;
             case 4:
               PerfMeasuringUtils.TestPerformance_v0_4();
@@ -58,6 +58,10 @@ namespace IntegruotuAplinkuLaboratorinis3
               PerfMeasuringUtils.TestCollectionsPerformance_v0_5();
               break;
 
+            case 7:
+              PerfMeasuringUtils.TestOptimizedSortingStrategies_v1_0();
+              break;
+
             default:
               Console.WriteLine("Choice don't exists");
               break;
@@ -65,7 +69,7 @@ namespace IntegruotuAplinkuLaboratorinis3
         }
         catch (FormatException e)
         {
-          Console.WriteLine($"{e.Message} Menu option are called only using numbers. Press any key to continue...");
+          Console.WriteLine($"{e.Message} Menu option are called only using numbers. Press Enter key to continue...");
         }
         Console.ReadLine();
       }

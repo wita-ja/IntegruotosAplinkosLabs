@@ -46,7 +46,7 @@ namespace IntegruotuSistemuLaboratorinis3
         }
         else Console.WriteLine("Not valid answer. Should be 'y' to agree or 'n' to disagree. Please try again");
       }
-      Console.WriteLine("Student was successfully created. Press any key to continue...");
+      Console.WriteLine("Student was successfully created. Press Enter key to continue...");
       return createdStudent;
     }
 
@@ -66,7 +66,7 @@ namespace IntegruotuSistemuLaboratorinis3
         {
           Console.WriteLine("{0, -30} {1, -20} {2, -5:#.##}", student.Surname, student.Name, student.CalcFinalPointsUsingAvg());
         });
-        Console.WriteLine("Press any key to continue...");
+        Console.WriteLine("Press Enter key to continue...");
       }
       else
       {
@@ -78,7 +78,7 @@ namespace IntegruotuSistemuLaboratorinis3
         {
           Console.WriteLine("{0, -30} {1, -20} {2, -21:#.##} {3, -20:#.##}", student.Surname, student.Name, student.CalcFinalPointsUsingAvg(), student.CalcFinalPointsUsingMedian());
         });
-        Console.WriteLine("Press any key to continue...");
+        Console.WriteLine("Press Enter key to continue...");
       }
     }
 
@@ -92,11 +92,13 @@ namespace IntegruotuSistemuLaboratorinis3
                 .Select(line => line.Split(","))
                 .Select(values => StudentFromCsvString(values))
                 .ToList();
+        Console.WriteLine("Students where successfully imported. Press Enter key to continue...");
       }
       catch (FileNotFoundException e)
       {
         Console.WriteLine(e.ToString());
       }
+      
       return students;
     }
 
