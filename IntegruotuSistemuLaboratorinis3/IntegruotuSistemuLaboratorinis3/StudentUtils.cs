@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace IntegruotuSistemuLaboratorinis3
 {
@@ -50,7 +49,7 @@ namespace IntegruotuSistemuLaboratorinis3
       Console.WriteLine("Student was successfully created. Press any key to continue...");
       return createdStudent;
     }
-    
+
     public static void PrintInTable(List<Student> students, bool median)
     {
       students = students.OrderBy(student => student.Name).ToList();
@@ -101,7 +100,7 @@ namespace IntegruotuSistemuLaboratorinis3
       return students;
     }
 
-    public static List<Student> GenerateStudentsFullConstructor_List(int numOfStudents)
+    public static List<Student> GenerateStudentsList(int numOfStudents)
     {
       List<Student> students = new List<Student>();
 
@@ -112,28 +111,22 @@ namespace IntegruotuSistemuLaboratorinis3
       return students;
     }
 
-    public static void SortStudents_v0_4(List<Student> students)
+    public static void GenerateStudentsToCSVFile(int numOfStudents)
     {
-      int numOfStudents = students.Count();
-      StreamWriter passedStudentsList = new StreamWriter($"passed_students_{numOfStudents}.csv");
-      StreamWriter failedStudentsList = new StreamWriter($"failed_students_{numOfStudents}.csv");
+      StreamWriter studentsStream = new StreamWriter($"students_{numOfStudents}.csv");
 
-      passedStudentsList.WriteLine("Name,Surname,HW1,HW2,HW3,HW4,HW5,Exam");
-      failedStudentsList.WriteLine("Name,Surname,HW1,HW2,HW3,HW4,HW5,Exam");
+      studentsStream.WriteLine("Name,Surname,HW1,HW2,HW3,HW4,HW5,Exam");
 
       for (int i = 0; i < numOfStudents; i++)
       {
-        Student currStudent = students.ElementAt(i);
-        if (currStudent.CalcFinalPointsUsingAvg() >= 5)
-          passedStudentsList.WriteLine(StudentToCsvString(currStudent));
-        else failedStudentsList.WriteLine(StudentToCsvString(currStudent));
+        Student student = new Student($"Name_{i}", $"Surname_{i}", GenerateHomeworks(5), GenerateExamResult());
+        studentsStream.WriteLine(StudentToCsvString(student));
       }
 
-      passedStudentsList.Close();
-      failedStudentsList.Close();
+      studentsStream.Close();
     }
 
-    private static string StudentToCsvString(Student student)
+    public static string StudentToCsvString(Student student)
     {
       string allHomeworks = "";
 
