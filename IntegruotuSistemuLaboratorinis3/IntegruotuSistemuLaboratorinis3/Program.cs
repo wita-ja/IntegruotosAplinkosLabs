@@ -16,10 +16,12 @@ namespace IntegruotuAplinkuLaboratorinis3
       {
         Console.Clear();
         Console.WriteLine("\n       Menu\n" +
-                            "1 - Add student.\n" +
+                            "1 - Add student\n" +
                             "2 - Print students to table\n" +
                             "3 - Import students from csv file\n" +
                             "4 - Generating and dividing students performance test\n" +
+                            "5 - Generate csv files with students for performance testing\n" +
+                            "6 - Measure performance of sorting students while using List, Linkedlist, Queue to store them\n" +
                             "0 - Exit.\n");
 
         Console.Write("Choose which task to run: ");
@@ -46,6 +48,14 @@ namespace IntegruotuAplinkuLaboratorinis3
               break;
             case 4:
               PerfMeasuringUtils.TestPerformance_v0_4();
+              break;
+
+            case 5:
+              PerfMeasuringUtils.GenerateTestingFiles();
+              break;
+
+            case 6:
+              PerfMeasuringUtils.TestCollectionsPerformance_v0_5();
               break;
 
             default:
